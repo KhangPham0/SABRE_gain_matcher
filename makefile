@@ -11,11 +11,19 @@ createdirs := $(shell for dir in $(incdir) $(srcdir) $(objdir) $(libdir) $(bindi
     mkdir -p $$dir; \
   done)
 
-# Define compiler and flags
+# Define compiler
 CXX := g++
-CXXFLAGS := -std=c++11 -O3 -fPIC -g $(shell root-config --cflags)
-CPPFLAGS := -I./ -I$(incdir) -I$(shell root-config --incdir) 
-LDFLAGS := $(shell root-config --libs) -fopenmp 
+
+# Check for operating system and use corresponding flags
+ifeq ($(shell uname), Linux)
+    CXXFLAGS := -std=c++11 -O3 -fPIC -g $(shell root-config --cflags)
+    CPPFLAGS := -I./ -I$(incdir) -I$(shell root-config --incdir)
+    LDFLAGS := $(shell root-config --libs) -fopenmp
+else ifeq ($(shell uname), Darwin)
+    CXXFLAGS := -std=c++11 -O3 -fPIC -g $(shell root-config --cflags) -Xpreprocessor -fopenmp
+    CPPFLAGS := -I./ -I$(incdir) -I$(shell root-config --incdir) -I$(shell brew --prefix libomp)/include
+    LDFLAGS := $(shell root-config --libs) -L$(shell brew --prefix libomp)/lib -lomp
+endif
 
 # Define main application binary and source files
 main_app := $(bindir)/gainMatch
