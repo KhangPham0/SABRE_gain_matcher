@@ -50,11 +50,12 @@ The program will load the required shared library, process the input arguments a
 
 This is useful if you want to recalibrate a single detector or if you want to manually control the calibration process.
 
-### Running the Concurrent Calibration Script
+### Running the Concurrent Calibration Script (Linux Only)
 
-For convenience, you can calibrate all five detectors concurrently with a single command using a bash script.
+For convenience, you can calibrate all five detectors concurrently with a single command using a bash script. **Please note that this script currently only supports Linux systems due to its reliance on `gnome-terminal` for concurrent executions. Please ensure `gnome-terminal` is available on your Linux machine.**
 
-To calibrate all detectors concurrently, use the following command:
+
+To calibrate all detectors concurrently on a Linux system, use the following command:
 
 `./gainMatchAllDetectorsConcurrently.sh <run_number>`
 
@@ -62,7 +63,7 @@ Where:
 
 + `<run_number>` is an integer representing the run number of the input files you want to use for gain matching.
 
-This script will open separate terminals and run the calibration for each detector concurrently. It creates temporary files (`/tmp/det#_done` where `#` goes from 0 to 4) to keep track of the status of each calibration process. Once all calibrations are done, it will automatically run the ROOT macro `combineGainMaps.C` to combine the gain files.
+This script will open separate terminals (using `gnome-terminal`) and run the calibration for each detector concurrently. It creates temporary files (`/tmp/det#_done` where `#` goes from 0 to 4) to keep track of the status of each calibration process. Once all calibrations are done, it will automatically run the ROOT macro `combineGainMaps.C` to combine the gain files.
 
 Please note that this concurrent script may occasionally exhibit bug-like behavior during the plotting process. If such issues arise, consider using the individual calibration method or the sequential calibration script.
 
